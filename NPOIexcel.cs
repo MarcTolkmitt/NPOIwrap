@@ -30,7 +30,7 @@ namespace NPOIwrap
     /// <summary>
     /// Wrappper for the work with Excel using NPOI.
     /// </summary>
-    internal class NPOIexcel
+    public class NPOIexcel
     {
         // local variables
         public string fileEnding = ".xlsx";
