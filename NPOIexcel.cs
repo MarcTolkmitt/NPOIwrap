@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -147,6 +148,7 @@ namespace NPOIwrap
             sheets.Clear();
             sheetsHeaders.Clear();
             sheetsHeadersBool.Clear();
+            sheetsNames.Clear();
             dataListString.Clear();
             dataListDouble.Clear();
             dataListMixed.Clear();
@@ -172,6 +174,8 @@ namespace NPOIwrap
                 number = workbook.NumberOfSheets - 1;
                 sheetsHeadersBool.Add( withHeader );
                 sheetsHeaders.Add( new ExcelDataRowList() );
+                sheetsHeaders[ number ].cellData.Add( "empty header" );
+                sheetsNames.Add( "no name yet" );
 
             }
             else if ( sheets[ number ].LastRowNum >= 0 )
@@ -180,15 +184,18 @@ namespace NPOIwrap
                     sheets[ number ].RemoveRow( sheets[ number ].GetRow( i ) );
                 sheetsHeadersBool[ number ] = withHeader;
                 sheetsHeaders[ number ] = new ExcelDataRowList();
+                sheetsHeaders[ number ].cellData.Add( "empty header" );
 
             }
             // then the name or a made one
+            string sheetName;
             if ( !string.IsNullOrEmpty( name ) )
-                sheetsNames[ number ] = name;
+                sheetName = name;
             else
-                sheetsNames[ number ] = $"table {number}";
+                sheetName = $"table {number}";
+            sheetsNames[ number ] = sheetName;
             // update the local data
-            ReadSheets();
+            //ReadSheets();
 
             return ( number );
 
@@ -233,11 +240,14 @@ namespace NPOIwrap
             sheets.Clear();
             sheetsHeaders.Clear();
             sheetsHeadersBool.Clear();
+            sheetsNames.Clear();
             for ( int i = 0; i < workbook.NumberOfSheets; i++ )
             {
                 sheets.Add( workbook.GetSheetAt( i ) );
                 sheetsHeaders.Add( new ExcelDataRowList() );
+                sheetsHeaders[ i ].cellData.Add( "init sheets" );
                 sheetsHeadersBool.Add( false );
+                sheetsNames.Add( "empty header" );
 
             }
 
@@ -250,7 +260,8 @@ namespace NPOIwrap
         /// <param name="number">number of the sheet</param>
         /// <param name="useHeader">use a header row</param>
         /// <returns>the truth of success ( wrong number? )</returns>
-        public bool ReadSheetAsListString( int number, bool useHeader = false )
+        public bool ReadSheetAsListString( int number, bool useHeader = false,
+            bool verbose = false )
         {
             if ( number >= sheets.Count )
                 return ( false );
@@ -268,7 +279,7 @@ namespace NPOIwrap
             }
             for ( int i = firstRow; i <= sheets[ number ].LastRowNum; i++ )
             {   // read the sheet's rows
-                dataListString.Add( new ExcelDataRowList( CellType.String ) );
+                dataListString.Add( new ExcelDataRowList( CellType.String, verbose, verbose ) );
                 dataListString[ i + deltaRow ].FromRow( sheets[ number ].GetRow( i ) );
 
             }
@@ -292,8 +303,8 @@ namespace NPOIwrap
             if ( useHeader )
             {   // put the header strings as the first row
                 row = sheets[ number ].CreateRow( 0 );
-                if ( sheetsHeadersBool[ number ] )
-                    sheetsHeaders[ number ].AsRow( ref row );
+                sheetsHeadersBool[ number ] = true;
+                sheetsHeaders[ number ].AsRow( ref row );
 
                 deltaRow++;
 
@@ -315,7 +326,8 @@ namespace NPOIwrap
         /// <param name="number">number of the sheet</param>
         /// <param name="useHeader">use a header row</param>
         /// <returns>the truth of success ( wrong number? )</returns>
-        public bool ReadSheetAsListDouble( int number, bool useHeader = false )
+        public bool ReadSheetAsListDouble( int number, bool useHeader = false, 
+            bool verbose = false )
         {
             if ( number >= sheets.Count )
                 return ( false );
@@ -333,8 +345,8 @@ namespace NPOIwrap
             }
             for ( int i = firstRow; i <= sheets[ number ].LastRowNum; i++ )
             {   // read the sheet's rows
-                dataListDouble.Add( new ExcelDataRowList( CellType.Numeric ) );
-                dataListDouble[ i - deltaRow ].FromRow( sheets[ number ].GetRow( i ) );
+                dataListDouble.Add( new ExcelDataRowList( CellType.Numeric, verbose, verbose ) );
+                dataListDouble[ i + deltaRow ].FromRow( sheets[ number ].GetRow( i ) );
 
             }
 
@@ -357,8 +369,8 @@ namespace NPOIwrap
             if ( useHeader )
             {   // put the header strings as the first row
                 row = sheets[ number ].CreateRow( 0 );
-                if ( sheetsHeadersBool[ number ] )
-                    sheetsHeaders[ number ].AsRow( ref row );
+                sheetsHeadersBool[ number ] = true;
+                sheetsHeaders[ number ].AsRow( ref row );
 
                 deltaRow++;
 
@@ -399,7 +411,7 @@ namespace NPOIwrap
             for ( int i = firstRow; i <= sheets[ number ].LastRowNum; i++ )
             {   // read the sheet's rows
                 dataListMixed.Add( new ExcelDataRow() );
-                dataListMixed[ i - deltaRow ].FromRow( sheets[ number ].GetRow( i ) );
+                dataListMixed[ i + deltaRow ].FromRow( sheets[ number ].GetRow( i ) );
 
             }
 
@@ -422,8 +434,8 @@ namespace NPOIwrap
             if ( useHeader )
             {   // put the header strings as the first row
                 row = sheets[ number ].CreateRow( 0 );
-                if ( sheetsHeadersBool[ number ] )
-                    sheetsHeaders[ number ].AsRow( ref row );
+                sheetsHeadersBool[ number ] = true;
+                sheetsHeaders[ number ].AsRow( ref row );
 
                 deltaRow++;
 
@@ -437,6 +449,27 @@ namespace NPOIwrap
 
             return ( true );
         }   // end: public void CreateSheetFromListMixed
+
+        /// <summary>
+        /// Changes the header of a sheet - only if it exists.
+        /// </summary>
+        /// <param name="number">sheet number</param>
+        /// <param name="heads">a field of strings</param>
+        /// <returns>truth of success</returns>
+        public bool ChangeHeader( int number, string[] heads )
+        {
+            if ( number > ( workbook.NumberOfSheets - 1 ) )
+                return ( false );
+            sheetsHeadersBool[ number ] = true;
+            sheetsHeaders[ number ].cellData.Clear();
+            foreach( string head in heads )
+                sheetsHeaders[ number ].cellData.Add( head );
+            var row = sheets[ number ].GetRow( 0 );
+            sheetsHeaders[ number ].AsRow( ref row );
+            SaveWorkbook( "", true );
+            
+            return ( true );
+        }   // end: public void AddHeaders
 
         /// <summary>
         /// For the first demo.
@@ -453,9 +486,11 @@ namespace NPOIwrap
         /// ToString(): for the row list having string cells.
         /// </summary>
         /// <returns>the message</returns>
-        public string DataListString_ToString( )
+        public string DataListString_ToString( int sheetNo = 0, bool useHeader = false )
         {
             string text = "";
+            if ( useHeader )
+                text += sheetsHeaders[ sheetNo ].ToString() + "\n";
             if ( dataListString.Count > 0 )
                 for ( int i = 0; i < dataListString.Count; i++ )
                     text += dataListString[ i ].ToString() + "\n";
@@ -470,18 +505,39 @@ namespace NPOIwrap
         /// ToString(): for the row list having double cells.
         /// </summary>
         /// <returns>the message</returns>
-        public string DataListDouble_ToString( )
+        public string DataListDouble_ToString( int sheetNo = 0, bool useHeader = false )
         {
             string text = "";
-            if ( dataListString.Count > 0 )
-                for ( int i = 0; i < dataListString.Count; i++ )
-                    text += dataListString[ i ].ToString() + "\n";
+            if ( useHeader )
+                text += sheetsHeaders[ sheetNo ].ToString() + "\n";
+            if ( dataListDouble.Count > 0 )
+                for ( int i = 0; i < dataListDouble.Count; i++ )
+                    text += dataListDouble[ i ].ToString() + "\n";
             else
                 text += "empty list... \n";
 
             return ( text );
 
         }   // end:public void DataListDouble_ToString
+
+        /// <summary>
+        /// ToString(): for the mixed list
+        /// </summary>
+        /// <returns>the message</returns>
+        public string DataListMixed_ToString( int sheetNo = 0, bool useHeader = false )
+        {
+            string text = "";
+            if ( useHeader )
+                text += sheetsHeaders[ sheetNo ].ToString() + "\n";
+            if ( dataListMixed.Count > 0 )
+                for ( int i = 0; i < dataListMixed.Count; i++ )
+                    text += dataListMixed[ i ].ToString() + "\n";
+            else
+                text += "empty list... \n";
+
+            return ( text );
+
+        }   // end:public void DataListMixed_ToString
 
         /// <summary>
         /// delivers the current directory
