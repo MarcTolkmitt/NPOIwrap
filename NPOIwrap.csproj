@@ -5,6 +5,20 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>helper-NPOIwrap-use-Excel-xlsx</PackageId>
+    <Title>use Excel xlsx-files with this wrapper for NPOI</Title>
+    <Version>$(VersionPrefix)1.0.0</Version>
+	<Authors>Marc Tolkmitt</Authors>
+	<Company>private: Marc Tolkmitt</Company>
+	<Description>A wrapper for NPOI to use Excel-xlsx files.</Description>
+    <Copyright>Apache License 2.0</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/MarcTolkmitt/NPOIwrap</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MarcTolkmitt/NPOIwrap</RepositoryUrl>
+    <PackageTags>helper;NPOI;Excel;xlsx</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +31,13 @@
 
   <ItemGroup>
     <PackageReference Include="NPOI" Version="2.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
