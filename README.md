@@ -24,12 +24,6 @@ get and to give data to the wrapper ( DataList...As...(), Array...ToDataList*() 
 In the program you take an instance of the 'NPOIexcel'-class and everything is wrapped. 
 You should add data from the program side into the lists and then write the file.  
 
--> there you have your Excel's file data to your convenience, you can now get the data 
-with "double[][] doubles = myData.DataListDoubleAsArrayRagged();".  
-I added functions to 
-get and to give data to the wrapper ( DataList...As...(), Array...ToDataList...() ). 
-In the program you take an instance of the 'NPOIexcel'-class and everything is wrapped. 
-You should add data from the program side into the lists and then write the file.  
   
 Demoprogram for the DLL is: WPFwithNPOI. It shows how easy you can read and write Excel-xlsx-files. Every menuitem uses its local version of the NPOIexcel-class and thus works as complete example about how-to-use the NPOIwrap on your own.
 
