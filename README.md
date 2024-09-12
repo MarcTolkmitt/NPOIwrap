@@ -1,4 +1,6 @@
+
 THIS DLL IS AVAILABLE AS NUGET-PACKAGE 'helper-NPOIwrap-use-Excel-xlsx.1.0.1.nupkg'   
+
 
 Seeing NPOI and using it is great. Usage for my own software is reading and writing 
 data from/to real Excel files.  
@@ -14,6 +16,13 @@ Procedure:
 - myData.ReadWorkbook();	// this will give you the file dialog  
 - myData.ReadSheets();	// instanciates all sheets into the wrapper class  
 - mydata.ReadSheetAsListDouble( 0 );	// no header, filled into dataListDouble  
+
+-> there you have your Excel's file data to your convenience, you can now get the data 
+with "double[][] doubles = myData.DataListDoubleAsArrayRagged();".  
+I added functions to 
+get and to give data to the wrapper ( DataList...As...(), Array...ToDataList*() ). 
+In the program you take an instance of the 'NPOIexcel'-class and everything is wrapped. 
+You should add data from the program side into the lists and then write the file.  
 
 -> there you have your Excel's file data to your convenience, you can now get the data 
 with "double[][] doubles = myData.DataListDoubleAsArrayRagged();".  
