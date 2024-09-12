@@ -26,8 +26,8 @@ using System.Windows;
 namespace NPOIwrap
 {
     /// <summary>
-    /// A class for a list of row data, to be
-    /// adapted to the special cases in other software.
+    /// A class for a list of row data, 
+    /// this one stores 'double's
     /// <para/>
     /// Meaning: the data type of the list is
     /// a parameter for the constructor.
@@ -35,13 +35,29 @@ namespace NPOIwrap
     /// Internally i use 'string' and 'double' in the list. I see no other
     /// celltype to be usable without mix as a row.
     /// </summary>
-    public class ExcelDataRowList
+    public class ExcelDataRowListDouble
     {
-        // the data
-        public List<object> cellData;
-        public CellType cellDataType;
+        // Erstellt ab: 12.02.2024
+        // letzte Änderung: 12.09.24
+        Version version = new Version("1.0.2");
+
+        /// <summary>
+        /// list of the cells in the given row
+        /// </summary>
+        public List<double> cellData;
+        /// <summary>
+        /// use one of them [ CellType.Numeric, CellType.String ]
+        /// </summary>
+        public CellType cellDataType = CellType.Numeric;
+        /// <summary>
+        ///  debug information
+        /// </summary>
         public bool debugTextOn = false;
+        /// <summary>
+        /// message boxes to be seen
+        /// </summary>
         public bool showMessageBox = false;
+
         // private var's
         int indexFirstCell;
         int indexLastCell;
@@ -49,33 +65,28 @@ namespace NPOIwrap
         string debugText ="Debuginfo: ";
 
         /// <summary>
-        /// Constructor that can alter the list-type.
+        /// Constructor.
         /// <para/>At the moment only 'double' is the alternative to 
         /// 'string'.
         /// <para/>Debug information was added to see information about empty cells,
         /// as Excel is storing a list of special nodes per row that have their
         /// position in '.ColumnsIndex'.
         /// </summary>
-        /// <param name="cellTypeToUse">Standard is 'string' or choose 'double'.</param>
         /// <param name="turnDebugTextOn">add debug information to 'ToString'</param>
         /// <param name="showMessageBoxOn">even show the debug information as 'MessageBox'</param>
-        public ExcelDataRowList( CellType cellTypeToUse = CellType.String,
-            bool turnDebugTextOn = false, bool showMessageBoxOn = false )
+        public ExcelDataRowListDouble( bool turnDebugTextOn = false, 
+            bool showMessageBoxOn = false )
         {
-            if ( cellTypeToUse == CellType.Numeric )
-                cellDataType = cellTypeToUse;
-            else
-                cellDataType = CellType.String;
-            cellData = new List<object>();
+            cellData = new List<double>();
             if ( turnDebugTextOn )
                 debugTextOn = true;
             if ( showMessageBoxOn )
                 showMessageBox = true;
 
-        }   // end: public ExcelDataRowList
+        }   // end: public ExcelDataRowListDouble
 
         /// <summary>
-        /// Look like a common save/load-routine:
+        /// Looks like a common save/load-routine:
         /// first_in will be first_out.
         /// </summary>
         /// <param name="row">the row to be used</param>
@@ -92,31 +103,19 @@ namespace NPOIwrap
             {
                 for ( int i = 0; i < cellData.Count; i++ )
                 {
-                    switch ( cellDataType )
-                    {
-                        case CellType.String:
-                            cell = row.CreateCell( i, CellType.String );
-                            cell.SetCellValue( (string)cellData[ i ] );
-                            break;
-                        case CellType.Numeric:
-                            cell = row.CreateCell( i, CellType.Numeric );
-                            cell.SetCellValue( (double)cellData[ i ] );
-                            break;
-                        default:
-                            break;
-
-                    }   // end: switch
+                    cell = row.CreateCell( i, CellType.Numeric );
+                    cell.SetCellValue( (double)cellData[ i ] );
 
                 }   // end: for
 
-            }   // end; if
+            }   // end: if
 
             return ( true );
 
         }   // end: public bool AsRow
 
         /// <summary>
-        /// Look like a common save/load-routine:
+        /// Looks like a common save/load-routine:
         /// first_in will be first_out.
         /// </summary>
         /// <param name="row">the row to be used</param>
@@ -142,47 +141,20 @@ namespace NPOIwrap
                 if ( thisCell != null )
                 {
                     numCells++;
-                    switch ( cellDataType )
+                    if ( thisCell.CellType != CellType.Numeric )
                     {
-                        case CellType.String:
-                            if ( thisCell.CellType != CellType.String )
-                            {
-                                MessageBox.Show( $"This is not a string-type cell ! Index: {thisCell.ColumnIndex}" );
-                                return ( false );
-                            }
-                            cellData.Add( (object)thisCell.StringCellValue );
-                            break;
-                        case CellType.Numeric:
-                            if ( thisCell.CellType != CellType.Numeric )
-                            {
-                                MessageBox.Show( $"This is not a numeric-type cell ! Index: {thisCell.ColumnIndex}" );
-                                return ( false );
-                            }
-                            cellData.Add( (object)thisCell.NumericCellValue );
-                            break;
-                        default:
-                            break;
-
-                    }   // end: switch
+                        MessageBox.Show( $"This is not a numeric-type cell ! Index: {thisCell.ColumnIndex}" );
+                        return ( false );
+                    
+                    }
+                    cellData.Add( thisCell.NumericCellValue );
 
                 }
                 else
                 {
                     var newCell = row.CreateCell( j, cellDataType );
-                    switch ( cellDataType )
-                    {
-                        case CellType.String:
-                            newCell.SetCellValue( "" );
-                            cellData.Add( (object)newCell.StringCellValue );
-                            break;
-                        case CellType.Numeric:
-                            newCell.SetCellValue( double.NaN );
-                            cellData.Add( (object)newCell.NumericCellValue );
-                            break;
-                        default:
-                            break;
-
-                    }   // end: switch
+                    newCell.SetCellValue( double.NaN );
+                    cellData.Add( newCell.NumericCellValue );
 
                 }   // end: null-test
 
@@ -224,6 +196,32 @@ namespace NPOIwrap
 
         }   // end: public string ToString
 
-    }   // end: public class ExcelDataRowList
+        /// <summary>
+        /// Returns the list of data as 'double[]'
+        /// </summary>
+        /// <returns>the string-array</returns>
+        public double[] CellDataAsArray( )
+        {
+            double[] temp = new double[ cellData.Count ];
+            for ( int i = 0; i < cellData.Count; ++i )
+                temp[ i ] = cellData[ i ];
 
-}
+            return ( temp );
+
+        }   // end: CellDataAsArray
+
+        /// <summary>
+        /// Stores the 'double's in the cellData-list
+        /// </summary>
+        /// <param name="doubles">array of 'double's</param>
+        public void ArrayToCellData( double[] doubles )
+        {
+            cellData.Clear();
+            foreach ( double d in doubles )
+                cellData.Add( d );
+
+        }   // end: ArrayToCellData
+
+    }   // end: public class ExcelDataRowListDouble
+
+}   // end: namespace NPOIwrap

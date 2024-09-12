@@ -31,7 +31,9 @@ namespace NPOIwrap
     /// </summary>
     public class ExcelDataRow
     {
-        ICell cell;
+        // Erstellt ab: 08.02.2024
+        // letzte Änderung: 12.09.24
+        Version version = new Version("1.0.1");
         // the data - should be public
         public int exampleIntNumber;
         public double exampleDoubleNumber;
@@ -52,11 +54,14 @@ namespace NPOIwrap
         /// <summary>
         /// Look like a common save/load-routine:
         /// first_in will be first_out.
+        /// <para>This is just an example and you can see the its
+        /// taking care of the example's data only.</para>
         /// </summary>
         /// <param name="row">the row to be used</param>
         /// <returns>bool: the success</returns>
         public bool AsRow( ref IRow row )
         {
+            ICell cell;
             // clear all cells first
             if ( row.LastCellNum > 0 )
                 for ( int i = ( row.LastCellNum - 1 ); i >= 0; i-- )
@@ -76,6 +81,8 @@ namespace NPOIwrap
         /// <summary>
         /// Look like a common save/load-routine:
         /// first_in will be first_out.
+        /// <para>This is just an example and you can see the 'switch'
+        /// taking care of the example's data only.</para>
         /// </summary>
         /// <param name="row">the row to be used</param>
         /// <returns>bool: the success</returns>
@@ -115,6 +122,7 @@ namespace NPOIwrap
 
 
             return ( true );
+
         }   // end: public bool FromRow
 
         /// <summary>

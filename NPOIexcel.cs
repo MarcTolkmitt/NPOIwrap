@@ -25,25 +25,60 @@ using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml;
 
 namespace NPOIwrap
 {
     /// <summary>
     /// Wrappper for the work with Excel using NPOI.
+    /// <para></para>
     /// </summary>
     public class NPOIexcel
     {
+        // Erstellt ab: 08.02.2024
+        // letzte Änderung: 12.09.24
+        Version version = new Version("1.0.1");
         // local variables
+        /// <summary>
+        /// Excel file ending
+        /// </summary>
         public string fileEnding = ".xlsx";
+        /// <summary>
+        /// example filename
+        /// </summary>
         public string fileName = @"DemoExcelFile.xlsx";
+        /// <summary>
+        /// the read excel file is handled by NPOI as a 'IWorkbook'
+        /// </summary>
         IWorkbook workbook;
-        List<ISheet> sheets = new List<ISheet>();       // usable globally in the workbook
-        List<string> sheetsNames = new List<string>();  // usable globally in the workbook
-        List<ExcelDataRowList> sheetsHeaders = new List<ExcelDataRowList>();// usable globally in the workbook
-        List<bool> sheetsHeadersBool = new List<bool>();    // usable globally in the workbook
-        // the data lists should be public
-        public List<ExcelDataRowList> dataListString = new List<ExcelDataRowList>();
-        public List<ExcelDataRowList> dataListDouble = new List<ExcelDataRowList>();
+        /// <summary>
+        /// usable globally in the workbook
+        /// </summary>
+        List<ISheet> sheets = new List<ISheet>();
+        /// <summary>
+        /// usable globally in the workbook
+        /// </summary>
+        List<string> sheetsNames = new List<string>();
+        /// <summary>
+        /// usable globally in the workbook
+        /// </summary>
+        List<ExcelDataRowListString> sheetsHeaders = new List<ExcelDataRowListString>();
+        /// <summary>
+        /// usable globally in the workbook
+        /// </summary>
+        List<bool> sheetsHeadersBool = new List<bool>();
+        /// <summary>
+        /// general data list will be filled with ReadSheetAsListString
+        /// </summary>
+        public List<ExcelDataRowListString> dataListString = new List<ExcelDataRowListString>();
+        /// <summary>
+        /// general data list will be filled with ReadSheetAsListDouble
+        /// </summary>
+        public List<ExcelDataRowListDouble> dataListDouble = 
+            new List<ExcelDataRowListDouble>();
+        /// <summary>
+        /// general data list will be filled with ReadSheetAsListMixed
+        /// </summary>
         public List<ExcelDataRow> dataListMixed = new List<ExcelDataRow>();
 
         /// <summary>
@@ -54,7 +89,7 @@ namespace NPOIwrap
         {
             workbook = new XSSFWorkbook();
             sheetsNames.Add( " table 0 " );
-
+            
         }   // end: public NPOIexcel
 
         /// <summary>
@@ -70,7 +105,7 @@ namespace NPOIwrap
             dialog.DefaultExt = fileEnding;
             dialog.Filter = "Excel-File (.xlsx) | *.xlsx"; // Filter files by extension
             dialog.FileName = fileName;
-
+            
             if ( !silent )
             {
                 var result = dialog.ShowDialog();
@@ -173,7 +208,7 @@ namespace NPOIwrap
                 sheets.Add( workbook.CreateSheet( name ) );
                 number = workbook.NumberOfSheets - 1;
                 sheetsHeadersBool.Add( withHeader );
-                sheetsHeaders.Add( new ExcelDataRowList() );
+                sheetsHeaders.Add( new ExcelDataRowListString() );
                 sheetsHeaders[ number ].cellData.Add( "empty header" );
                 sheetsNames.Add( "no name yet" );
 
@@ -183,7 +218,7 @@ namespace NPOIwrap
                 for ( int i = sheets[ number ].LastRowNum; i == 0; i++ )
                     sheets[ number ].RemoveRow( sheets[ number ].GetRow( i ) );
                 sheetsHeadersBool[ number ] = withHeader;
-                sheetsHeaders[ number ] = new ExcelDataRowList();
+                sheetsHeaders[ number ] = new ExcelDataRowListString();
                 sheetsHeaders[ number ].cellData.Add( "empty header" );
 
             }
@@ -233,7 +268,9 @@ namespace NPOIwrap
 
         /// <summary>
         /// Reads the sheets out of the workbook, but
-        /// the data has to be read somewhere else.
+        /// the data has to be read somewhere else. This includes
+        /// the headers -> ReadSheetAsListDouble/-String with 
+        /// 'useHeader' = true.
         /// </summary>
         public void ReadSheets( )
         {
@@ -244,7 +281,7 @@ namespace NPOIwrap
             for ( int i = 0; i < workbook.NumberOfSheets; i++ )
             {
                 sheets.Add( workbook.GetSheetAt( i ) );
-                sheetsHeaders.Add( new ExcelDataRowList() );
+                sheetsHeaders.Add( new ExcelDataRowListString() );
                 sheetsHeaders[ i ].cellData.Add( "init sheets" );
                 sheetsHeadersBool.Add( false );
                 sheetsNames.Add( "empty header" );
@@ -279,7 +316,7 @@ namespace NPOIwrap
             }
             for ( int i = firstRow; i <= sheets[ number ].LastRowNum; i++ )
             {   // read the sheet's rows
-                dataListString.Add( new ExcelDataRowList( CellType.String, verbose, verbose ) );
+                dataListString.Add( new ExcelDataRowListString( verbose, verbose ) );
                 dataListString[ i + deltaRow ].FromRow( sheets[ number ].GetRow( i ) );
 
             }
@@ -345,7 +382,7 @@ namespace NPOIwrap
             }
             for ( int i = firstRow; i <= sheets[ number ].LastRowNum; i++ )
             {   // read the sheet's rows
-                dataListDouble.Add( new ExcelDataRowList( CellType.Numeric, verbose, verbose ) );
+                dataListDouble.Add( new ExcelDataRowListDouble( verbose, verbose ) );
                 dataListDouble[ i + deltaRow ].FromRow( sheets[ number ].GetRow( i ) );
 
             }
@@ -552,6 +589,154 @@ namespace NPOIwrap
             return ( text );
 
         }   // end: public string GetCurrentDir
+
+        // ----------------------------------- QoL input/output
+        
+        /// <summary>
+        /// Gives you the data as 'string[,]'.
+        /// </summary>
+        /// <returns>two dimensional array ( string[,] )</returns>
+        public string[,] DataListStringAsArray()
+        {
+            string[,] temp = new string[ dataListString.Count,
+                dataListString[ 0 ].cellData.Count];
+            for ( int line = 0; line < dataListString.Count; line++ )
+                for ( int column = 0; column < dataListString[ 0 ].cellData.Count; column++ )
+                    temp[ line, column ] = dataListString[ line ].cellData[ column ];
+
+            return( temp );
+
+        }   // end: DataListStringAsArray
+
+        /// <summary>
+        /// Gives you the data as 'string[][]'.
+        /// </summary>
+        /// <returns>ragged array ( string[][] )</returns>
+        public string[][] DataListStringAsArrayRagged( )
+        {
+            string[][] temp = new string[ dataListString.Count ][];
+                
+            for ( int line = 0; line < dataListString.Count; line++ )
+                for ( int column = 0; column < dataListString[ 0 ].cellData.Count; column++ )
+                {
+                    temp[ line ] = new string[ dataListString[ 0 ].cellData.Count ];
+                    temp[ line ][ column ] = dataListString[ line ].cellData[ column ];
+                
+                }
+
+            return ( temp );
+
+        }   // end: DataListStringAsArrayRagged
+
+        /// <summary>
+        /// Stores your data into the handler.
+        /// </summary>
+        /// <param name="data">a two dimensinal array ( string[,] )</param>
+        public void ArrayToDataListString( string[,] data )
+        {
+            dataListString.Clear();
+            for ( int line = 0; line < data.Length; line++ )
+            {
+                string[] dataLine = new string[ data.Length ];
+                for ( int index = 0; index < dataLine.Length; index++ )
+                    dataLine[ index ] = data[ line, index ];
+                ExcelDataRowListString newLine = new ExcelDataRowListString();
+                newLine.ArrayToCellData( dataLine );
+                dataListString.Add( newLine );
+
+            }
+
+        }   // end: ArrayToDataListString
+
+        /// <summary>
+        /// Stores your data into the handler.
+        /// </summary>
+        /// <param name="data">a two dimensinal array ( string[,] )</param>
+        public void ArrayRaggedToDataListString( string[][] data )
+        {
+            dataListString.Clear();
+            for ( int line = 0; line < data.Length; line++ )
+            {
+                ExcelDataRowListString newLine = new ExcelDataRowListString();
+                newLine.ArrayToCellData( data[ line ] );
+                dataListString.Add( newLine );
+
+            }
+
+        }   // end: ArrayToDataListString
+
+        /// <summary>
+        /// Gives you the data as 'double[,]'.
+        /// </summary>
+        /// <returns>two dimensional array ( double[,] )</returns>
+        public double[,] DataListDoubleAsArray( )
+        {
+            double[,] temp = new double[ dataListDouble.Count,
+                dataListDouble[ 0 ].cellData.Count];
+            for ( int line = 0; line < dataListDouble.Count; line++ )
+                for ( int column = 0; column < dataListDouble[ 0 ].cellData.Count; column++ )
+                    temp[ line, column ] = dataListDouble[ line ].cellData[ column ];
+
+            return ( temp );
+
+        }   // end: DataListDoubleAsArray
+
+        /// <summary>
+        /// Gives you the data as 'double[][]'.
+        /// </summary>
+        /// <returns>ragged array ( double[][] )</returns>
+        public double[][] DataListDoubleAsArrayRagged( )
+        {
+            double[][] temp = new double[ dataListDouble.Count ][];
+
+            for ( int line = 0; line < dataListDouble.Count; line++ )
+                for ( int column = 0; column < dataListDouble[ 0 ].cellData.Count; column++ )
+                {
+                    temp[ line ] = new double[ dataListDouble[ 0 ].cellData.Count ];
+                    temp[ line ][ column ] = dataListDouble[ line ].cellData[ column ];
+
+                }
+
+            return ( temp );
+
+        }   // end: DataListDoubleAsArrayRagged
+
+        /// <summary>
+        /// Stores your data into the handler.
+        /// </summary>
+        /// <param name="data">a two dimensinal array ( double[,] )</param>
+        public void ArrayToDataListDouble( double[,] data )
+        {
+            dataListDouble.Clear();
+            for ( int line = 0; line < data.Length; line++ )
+            {
+                double[] dataLine = new double[ data.Length ];
+                for ( int index = 0; index < dataLine.Length; index++ )
+                    dataLine[ index ] = data[ line, index ];
+                ExcelDataRowListDouble newLine = new ExcelDataRowListDouble();
+                newLine.ArrayToCellData( dataLine );
+                dataListDouble.Add( newLine );
+
+            }
+
+        }   // end: ArrayToDataListDouble
+
+        /// <summary>
+        /// Stores your data into the handler.
+        /// </summary>
+        /// <param name="data">a two dimensinal array ( double[,] )</param>
+        public void ArrayRaggedToDataListDouble( double[][] data )
+        {
+            dataListDouble.Clear();
+            for ( int line = 0; line < data.Length; line++ )
+            {
+                ExcelDataRowListDouble newLine = new ExcelDataRowListDouble();
+                newLine.ArrayToCellData( data[ line ] );
+                dataListDouble.Add( newLine );
+
+            }
+
+        }   // end: ArrayRaggedToDataListDouble
 
     }   // end: internal class NPOIexcel
 
