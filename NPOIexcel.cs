@@ -36,8 +36,8 @@ namespace NPOIwrap
     public class NPOIexcel
     {
         // Erstellt ab: 08.02.2024
-        // letzte Änderung: 12.09.24
-        Version version = new Version("1.0.1");
+        // letzte Änderung: 13.09.24
+        public Version version = new Version("1.0.3");
         // local variables
         /// <summary>
         /// Excel file ending
@@ -58,19 +58,20 @@ namespace NPOIwrap
         /// <summary>
         /// usable globally in the workbook
         /// </summary>
-        List<string> sheetsNames = new List<string>();
+        public List<string> sheetsNames = new List<string>();
         /// <summary>
         /// usable globally in the workbook
         /// </summary>
-        List<ExcelDataRowListString> sheetsHeaders = new List<ExcelDataRowListString>();
+        public List<ExcelDataRowListString> sheetsHeaders = new List<ExcelDataRowListString>();
         /// <summary>
         /// usable globally in the workbook
         /// </summary>
-        List<bool> sheetsHeadersBool = new List<bool>();
+        public List<bool> sheetsHeadersBool = new List<bool>();
         /// <summary>
         /// general data list will be filled with ReadSheetAsListString
         /// </summary>
-        public List<ExcelDataRowListString> dataListString = new List<ExcelDataRowListString>();
+        public List<ExcelDataRowListString> dataListString = 
+            new List<ExcelDataRowListString>();
         /// <summary>
         /// general data list will be filled with ReadSheetAsListDouble
         /// </summary>
