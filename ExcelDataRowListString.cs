@@ -39,7 +39,7 @@ namespace NPOIwrap
     {
         // Erstellt ab: 12.02.2024
         // letzte Änderung: 12.09.24
-        Version version = new Version("1.0.2");
+        public Version version = new Version("1.0.2");
 
         /// <summary>
         /// list of the cells in the given row

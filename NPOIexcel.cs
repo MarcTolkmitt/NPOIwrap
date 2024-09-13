@@ -37,7 +37,7 @@ namespace NPOIwrap
     {
         // Erstellt ab: 08.02.2024
         // letzte Änderung: 13.09.24
-        public Version version = new Version("1.0.3");
+        public Version version = new Version("1.0.4");
         // local variables
         /// <summary>
         /// Excel file ending
@@ -739,6 +739,26 @@ namespace NPOIwrap
 
         }   // end: ArrayRaggedToDataListDouble
 
+        /// <summary>
+        /// Gives you the wanted header. I init the lists at 'ReadSheets()'
+        /// with standard information. If your header is not right maybe you forgot to use
+        /// 'ReadSheet( number )' first.
+        /// </summary>
+        /// <param name="numberHeader">number of the sheet in the workbook</param>
+        /// <returns>a string array with the informations</returns>
+        public string[] GetHeaderNo( int numberHeader )
+        {
+            if ( numberHeader > sheetsHeaders.Count )
+                throw new ArgumentException(
+                    "NPOIexcel.GetHeaderNo: This sheet number does not exist, Abort!",
+                    "( numberHeader > sheetsHeaders.Count )" );
+
+            string[] temp = sheetsHeaders[ numberHeader ].CellDataAsArray();
+
+            return ( temp );
+
+        }   // end: GetHeaderNo
+
     }   // end: internal class NPOIexcel
 
-}
+}   // end: namespace NPOIwrap

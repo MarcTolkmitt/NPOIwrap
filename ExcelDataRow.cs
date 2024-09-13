@@ -33,7 +33,7 @@ namespace NPOIwrap
     {
         // Erstellt ab: 08.02.2024
         // letzte Änderung: 12.09.24
-        Version version = new Version("1.0.1");
+        public Version version = new Version("1.0.1");
         // the data - should be public
         public int exampleIntNumber;
         public double exampleDoubleNumber;
