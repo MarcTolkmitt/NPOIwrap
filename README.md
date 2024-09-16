@@ -21,8 +21,9 @@ To **read** from an Excel-file:
 - NPOIexcel myData = new NPOIexcel();	*// the wrapper for **NPOI***  
 - myData.ReadWorkbook();	*// this will give you the file dialog*  
 - myData.ReadSheets();	*// first overview of the given file for the workbook*
-- mydata.ReadSheetAsListDouble( 0 );	*// no header used, filled into dataListDouble*  
+- myData.ReadSheetAsListDouble( 0 );	*// no header used, filled into dataListDouble*  
 - double[][] doubles = myData.DataListDoubleAsArrayRagged();	*// there you have your Excel's file data to your convenience*
+- string[] headers = myData.GetHeaderNo( sheetNumber );
 
 
 You should add data from the program side into the lists and then **write** the file:
