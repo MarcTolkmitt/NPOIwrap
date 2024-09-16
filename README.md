@@ -21,9 +21,8 @@ To **read** from an Excel-file:
 - NPOIexcel myData = new NPOIexcel();	*// the wrapper for **NPOI***  
 - myData.ReadWorkbook();	*// this will give you the file dialog*  
 - myData.ReadSheets();	*// first overview of the given file for the workbook*
-- myData.ReadSheetAsListDouble( 0 );	*// no header used, filled into dataListDouble*  
+- myData.ReadSheetAsListDouble( 0 );	*// sheetNumber = 0, no header used, filled into dataListDouble*  
 - double[][] doubles = myData.DataListDoubleAsArrayRagged();	*// there you have your Excel's file data to your convenience*
-- string[] headers = myData.GetHeaderNo( sheetNumber );
 
 
 You should add data from the program side into the lists and then **write** the file:
@@ -34,6 +33,9 @@ You should add data from the program side into the lists and then **write** the 
 - myData.SaveWorkbook( fileName );	*// this will save the file in real excel format thanks to **NPOI***
 
 I use lists to handle the workbook's possible complexity. They will be instanciated with standard values and later with the special operation of reading sheet# you can get your real headers, too.
+- myData.ReadSheetAsListDouble( 0, true );	*// sheetNumber = 0, header used, filled into dataListDouble*  
+- string[] headers = myData.GetHeaderNo( 0 );  *// sheetNumber = 0*
+
 ### 3. Demoprogram
 
 Demoprogram for the DLL is: WPFwithNPOI. It shows how easy you can read and write Excel-xlsx-files. Every menuitem uses its local version of the NPOIexcel-class and thus works as complete example about how-to-use the NPOIwrap on your own.
