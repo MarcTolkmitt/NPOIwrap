@@ -49,3 +49,10 @@ Demoprogram for the DLL is: WPFwithNPOI. It shows how easy you can read and writ
 This helper class uses **NPOI** by  
 **<u>Author: Tony Qu,NPOI Contributors</u>**  
 
+
+
+### 4.Donations
+
+You can if you want donate to me. I always can use it, thank you.
+
+https://www.paypal.com/ncp/payment/W3K7U4K7DFUB8
