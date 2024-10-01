@@ -1,5 +1,5 @@
 
-THIS DLL IS AVAILABLE AS NUGET-PACKAGE 'helper-**NPOIwrap**-use-Excel-xlsx.1.0.2.nupkg'   
+THIS DLL IS AVAILABLE AS NUGET-PACKAGE 'helper-**NPOIwrap**-use-Excel-xlsx.1.0.3.nupkg'   
 ## 1. my motivation  
 Seeing **NPOI** and using it is great. Usage for my own software is reading and writing 
 data from/to real Excel files.  
@@ -18,19 +18,24 @@ get and to give data to the wrapper ( **<u>DataList...As...(), Array...ToDataLis
 In the program you take an instance of the '**<u>NPOIexcel</u>**'-class and everything is wrapped.  
 
 To **read** from an Excel-file:
-- NPOIexcel myData = new NPOIexcel();	*// the wrapper for **NPOI***  
-- myData.ReadWorkbook();	*// this will give you the file dialog*  
-- myData.ReadSheets();	*// first overview of the given file for the workbook*
-- myData.ReadSheetAsListDouble( 0 );	*// sheetNumber = 0, no header used, filled into dataListDouble*  
-- double[][] doubles = myData.DataListDoubleAsArrayRagged();	*// there you have your Excel's file data to your convenience*
 
+```c#
+NPOIexcel myData = new NPOIexcel();	// the wrapper for **NPOI**
+myData.ReadWorkbook();	// this will give you the file dialog 
+myData.ReadSheets();	// first overview of the given file for the workbook
+myData.ReadSheetAsListDouble( 0 );	// sheetNumber = 0, no header used, filled into dataListDouble
+double[][] doubles = myData.DataListDoubleAsArrayRagged();	// there you have your Excel's file data to your convenience
+```
 
 You should add data from the program side into the lists and then **write** the file:
-- myData.CreateWorkbook();	*// start empty*
-- myData.CreateSheet( 0 );	*// new sheet to be filled*
-- myData.ArrayRaggedToDataListDouble( doubles );	*// you give him your data*
-- myData.CreateSheetFromListDouble( 0 );	*// this adds the data now to the workbook*
-- myData.SaveWorkbook( fileName );	*// this will save the file in real excel format thanks to **NPOI***
+
+```c#
+myData.CreateWorkbook();	// start empty
+myData.CreateSheet( 0 );	// new sheet to be filled
+myData.ArrayRaggedToDataListDouble( doubles );	// you give him your data
+myData.CreateSheetFromListDouble( 0 );	// this adds the data now to the workbook
+myData.SaveWorkbook( fileName );	// this will save the file in real excel format thanks to NPOI
+```
 
 I use lists to handle the workbook's possible complexity. They will be instanciated with standard values and later with the special operation of reading sheet# you can get your real headers, too.
 - myData.ReadSheetAsListDouble( 0, true );	*// sheetNumber = 0, header used, filled into dataListDouble*  
