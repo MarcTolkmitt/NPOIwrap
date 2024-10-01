@@ -36,8 +36,8 @@ namespace NPOIwrap
     public class NPOIexcel
     {
         // Erstellt ab: 08.02.2024
-        // letzte Änderung: 13.09.24
-        public Version version = new Version("1.0.4");
+        // letzte Änderung: 01.10.24
+        public Version version = new Version("1.0.5");
         // local variables
         /// <summary>
         /// Excel file ending
