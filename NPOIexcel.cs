@@ -30,14 +30,16 @@ using System.Xml;
 namespace NPOIwrap
 {
     /// <summary>
-    /// Wrappper for the work with Excel using NPOI.
+    /// Wrapper for the work with Excel using NPOI.
     /// <para></para>
     /// </summary>
     public class NPOIexcel
     {
-        // Erstellt ab: 08.02.2024
-        // letzte Änderung: 01.10.24
-        public Version version = new Version("1.0.5");
+        /// <summary>
+        /// created on: 08.02.2024
+        /// last edit: 05.10.24
+        /// </summary>
+        public Version version = new Version("1.0.6");
         // local variables
         /// <summary>
         /// Excel file ending
@@ -83,8 +85,8 @@ namespace NPOIwrap
         public List<ExcelDataRow> dataListMixed = new List<ExcelDataRow>();
 
         /// <summary>
-        /// Construktor: the interface classes ( 'IWorkbook, Ixyz, ... )
-        /// need to be nullable or not, but i use lists mostly.
+        /// Constructor: the interface classes ( 'IWorkbook, Ixyz, ... )
+        /// need to be null-able or not, but i use lists mostly.
         /// </summary>
         public NPOIexcel( )
         {
@@ -97,7 +99,8 @@ namespace NPOIwrap
         /// Attempts to read the '.xlsx'-Excel file.
         /// </summary>
         /// <param name="path">given file should be in real '.xlsx'-format</param>
-        public void ReadWorkbook( string name = "", bool silent = false )
+        /// <returns>success of dialog</returns>
+        public bool ReadWorkbook( string name = "", bool silent = false )
         {
             if ( !string.IsNullOrEmpty( name ) )
                 fileName = GetCurrentDir() + name;
@@ -112,6 +115,8 @@ namespace NPOIwrap
                 var result = dialog.ShowDialog();
                 if ( result == true )
                     fileName = dialog.FileName;
+                else
+                    return( false );
 
             }
 
@@ -129,16 +134,20 @@ namespace NPOIwrap
                 MessageBox.Show( ex.Message,
                     "Excel read error", MessageBoxButton.OK,
                     MessageBoxImage.Error );
+                return( false );
 
             }
 
-        }   // end: public void ReadWorkbook
+            return( true );
+
+        }   // end: public bool ReadWorkbook
 
         /// <summary>
         /// writes the workbook to a new created file
         /// </summary>
         /// <param name="path">the new filename if given</param>
-        public void SaveWorkbook( string name = "", bool silent = false )
+        /// <returns>success of dialog</returns>
+        public bool SaveWorkbook( string name = "", bool silent = false )
         {
             if ( !string.IsNullOrEmpty( name ) )
                 fileName = GetCurrentDir() + name;
@@ -153,6 +162,8 @@ namespace NPOIwrap
                 var result = dialog.ShowDialog();
                 if ( result == true )
                     fileName = dialog.FileName;
+                else
+                    return ( false );
 
             }
 
@@ -170,8 +181,11 @@ namespace NPOIwrap
                     "write to file error -> is it open in Excel?",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error );
+                return ( false );
 
             }
+
+            return ( true );
 
         }   // end: public void SaveWorkbook
 
@@ -254,7 +268,7 @@ namespace NPOIwrap
             cell = row.CreateCell( 1, CellType.String );
             cell.SetCellValue( "World" );
             cell = row.CreateCell( 2, CellType.String );
-            cell.SetCellValue( ".. greets Marc from germany." );
+            cell.SetCellValue( ".. greets Marc from Germany." );
             row = sheets[ 0 ].CreateRow( 1 );
             cell = row.CreateCell( 0, CellType.String );
             cell.SetCellValue( "0.815" );
@@ -632,7 +646,7 @@ namespace NPOIwrap
         /// <summary>
         /// Stores your data into the handler.
         /// </summary>
-        /// <param name="data">a two dimensinal array ( string[,] )</param>
+        /// <param name="data">a two dimensional array ( string[,] )</param>
         public void ArrayToDataListString( string[,] data )
         {
             dataListString.Clear();
@@ -652,7 +666,7 @@ namespace NPOIwrap
         /// <summary>
         /// Stores your data into the handler.
         /// </summary>
-        /// <param name="data">a two dimensinal array ( string[,] )</param>
+        /// <param name="data">a two dimensional array ( string[,] )</param>
         public void ArrayRaggedToDataListString( string[][] data )
         {
             dataListString.Clear();
@@ -705,7 +719,7 @@ namespace NPOIwrap
         /// <summary>
         /// Stores your data into the handler.
         /// </summary>
-        /// <param name="data">a two dimensinal array ( double[,] )</param>
+        /// <param name="data">a two dimensional array ( double[,] )</param>
         public void ArrayToDataListDouble( double[,] data )
         {
             dataListDouble.Clear();
@@ -725,7 +739,7 @@ namespace NPOIwrap
         /// <summary>
         /// Stores your data into the handler.
         /// </summary>
-        /// <param name="data">a two dimensinal array ( double[,] )</param>
+        /// <param name="data">a two dimensional array ( double[,] )</param>
         public void ArrayRaggedToDataListDouble( double[][] data )
         {
             dataListDouble.Clear();
