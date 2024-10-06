@@ -38,8 +38,11 @@ myData.SaveWorkbook( fileName );	// this will save the file in real excel format
 ```
 
 I use lists to handle the workbook's possible complexity. They will be instanciated with standard values and later with the special operation of reading sheet# you can get your real headers, too.
-- myData.ReadSheetAsListDouble( 0, true );	*// sheetNumber = 0, header used, filled into dataListDouble*  
-- string[] headers = myData.GetHeaderNo( 0 );  *// sheetNumber = 0*
+
+```c#
+myData.ReadSheetAsListDouble( 0, true );	// sheetNumber = 0, header used, filled into dataListDouble
+string[] headers = myData.GetHeaderNo( 0 );	// sheetNumber = 0
+```
 
 ### 3. Demoprogram
 
