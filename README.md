@@ -1,5 +1,5 @@
 
-THIS DLL IS AVAILABLE AS NUGET-PACKAGE 'helper-**NPOIwrap**-use-Excel-xlsx.1.0.5.nupkg'   
+THIS DLL IS AVAILABLE AS NUGET-PACKAGE 'helper-**NPOIwrap**-use-Excel-xlsx.1.0.6.nupkg'   
 ## 1. my motivation  
 Seeing **NPOI** and using it is great. Usage for my own software is reading and writing 
 data from/to real Excel files.  
@@ -31,9 +31,8 @@ You should add data from the program side into the lists and then **write** the 
 
 ```c#
 myData.CreateWorkbook();	// start empty
-myData.CreateSheet( 0 );	// new sheet to be filled
-myData.ArrayRaggedToDataListDouble( doubles );	// you give him your data
-myData.CreateSheetFromListDouble( 0 );	// this adds the data now to the workbook
+myData.ArrayJaggedToDataListDouble( doubles );	// you give him your data
+myData.CreateSheetFromListDouble( 0 );	// this adds the data now to the workbook as sheet number 0
 myData.SaveWorkbook( fileName );	// this will save the file in real excel format thanks to NPOI
 ```
 

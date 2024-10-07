@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>helper-NPOIwrap-use-Excel-xlsx</PackageId>
     <Title>use Excel xlsx-files with this wrapper for NPOI</Title>
-    <Version>$(VersionPrefix)1.0.5</Version>
+    <Version>$(VersionPrefix)1.0.6</Version>
 	<Authors>Marc Tolkmitt</Authors>
 	<Company>private: Marc Tolkmitt</Company>
 	<Description>A wrapper for NPOI to use Excel-xlsx files.</Description>

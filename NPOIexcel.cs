@@ -217,15 +217,21 @@ namespace NPOIwrap
         /// <returns>the number of the created sheet</returns>
         public int CreateSheet( int number, string name = "", bool withHeader = false )
         {
+            // the name or a made one
+            string sheetName;
+            if ( !string.IsNullOrEmpty( name ) )
+                sheetName = name;
+            else
+                sheetName = $"table {number}";
             // first a new sheet by creation or deletion
             if ( number > ( workbook.NumberOfSheets - 1 ) )
             {   // no sheet with such a number
-                sheets.Add( workbook.CreateSheet( name ) );
+                sheets.Add( workbook.CreateSheet( sheetName ) );
                 number = workbook.NumberOfSheets - 1;
                 sheetsHeadersBool.Add( withHeader );
                 sheetsHeaders.Add( new ExcelDataRowListString() );
                 sheetsHeaders[ number ].cellData.Add( "empty header" );
-                sheetsNames.Add( "no name yet" );
+                sheetsNames.Add( "sheetName" );
 
             }
             else if ( sheets[ number ].LastRowNum >= 0 )
@@ -237,12 +243,6 @@ namespace NPOIwrap
                 sheetsHeaders[ number ].cellData.Add( "empty header" );
 
             }
-            // then the name or a made one
-            string sheetName;
-            if ( !string.IsNullOrEmpty( name ) )
-                sheetName = name;
-            else
-                sheetName = $"table {number}";
             sheetsNames[ number ] = sheetName;
             // update the local data
             //ReadSheets();
