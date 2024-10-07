@@ -1,5 +1,5 @@
 
-THIS DLL IS AVAILABLE AS NUGET-PACKAGE 'helper-**NPOIwrap**-use-Excel-xlsx.1.0.6.nupkg'   
+THIS DLL IS AVAILABLE AS NUGET-PACKAGE 'helper-**NPOIwrap**-use-Excel-xlsx.1.0.7.nupkg'   
 ## 1. my motivation  
 Seeing **NPOI** and using it is great. Usage for my own software is reading and writing 
 data from/to real Excel files.  
@@ -58,3 +58,6 @@ This helper class uses **NPOI** by
 You can if you want donate to me. I always can use it, thank you.
 
 https://www.paypal.com/ncp/payment/W3K7U4K7DFUB8
+
+
+

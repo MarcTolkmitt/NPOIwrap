@@ -705,12 +705,12 @@ namespace NPOIwrap
             double[][] temp = new double[ dataListDouble.Count ][];
 
             for ( int line = 0; line < dataListDouble.Count; line++ )
+            {
+                temp[ line ] = new double[ dataListDouble[ 0 ].cellData.Count ];
                 for ( int column = 0; column < dataListDouble[ 0 ].cellData.Count; column++ )
-                {
-                    temp[ line ] = new double[ dataListDouble[ 0 ].cellData.Count ];
                     temp[ line ][ column ] = dataListDouble[ line ].cellData[ column ];
 
-                }
+            }
 
             return ( temp );
 
