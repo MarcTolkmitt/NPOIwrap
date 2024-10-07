@@ -626,8 +626,8 @@ namespace NPOIwrap
         /// <summary>
         /// Gives you the data as 'string[][]'.
         /// </summary>
-        /// <returns>ragged array ( string[][] )</returns>
-        public string[][] DataListStringAsArrayRagged( )
+        /// <returns>jagged array ( string[][] )</returns>
+        public string[][] DataListStringAsArrayJagged( )
         {
             string[][] temp = new string[ dataListString.Count ][];
                 
@@ -641,7 +641,7 @@ namespace NPOIwrap
 
             return ( temp );
 
-        }   // end: DataListStringAsArrayRagged
+        }   // end: DataListStringAsArrayJagged
 
         /// <summary>
         /// Stores your data into the handler.
@@ -667,7 +667,7 @@ namespace NPOIwrap
         /// Stores your data into the handler.
         /// </summary>
         /// <param name="data">a two dimensional array ( string[,] )</param>
-        public void ArrayRaggedToDataListString( string[][] data )
+        public void ArrayJaggedToDataListString( string[][] data )
         {
             dataListString.Clear();
             for ( int line = 0; line < data.Length; line++ )
@@ -699,8 +699,8 @@ namespace NPOIwrap
         /// <summary>
         /// Gives you the data as 'double[][]'.
         /// </summary>
-        /// <returns>ragged array ( double[][] )</returns>
-        public double[][] DataListDoubleAsArrayRagged( )
+        /// <returns>jagged array ( double[][] )</returns>
+        public double[][] DataListDoubleAsArrayJagged( )
         {
             double[][] temp = new double[ dataListDouble.Count ][];
 
@@ -714,7 +714,7 @@ namespace NPOIwrap
 
             return ( temp );
 
-        }   // end: DataListDoubleAsArrayRagged
+        }   // end: DataListDoubleAsArrayJagged
 
         /// <summary>
         /// Stores your data into the handler.
@@ -740,7 +740,7 @@ namespace NPOIwrap
         /// Stores your data into the handler.
         /// </summary>
         /// <param name="data">a two dimensional array ( double[,] )</param>
-        public void ArrayRaggedToDataListDouble( double[][] data )
+        public void ArrayJaggedToDataListDouble( double[][] data )
         {
             dataListDouble.Clear();
             for ( int line = 0; line < data.Length; line++ )
@@ -751,7 +751,7 @@ namespace NPOIwrap
 
             }
 
-        }   // end: ArrayRaggedToDataListDouble
+        }   // end: ArrayJaggedToDataListDouble
 
         /// <summary>
         /// Gives you the wanted header. I init the lists at 'ReadSheets()'

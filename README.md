@@ -24,7 +24,7 @@ NPOIexcel myData = new NPOIexcel();	// the wrapper for **NPOI**
 myData.ReadWorkbook();	// this will give you the file dialog 
 myData.ReadSheets();	// first overview of the given file for the workbook
 myData.ReadSheetAsListDouble( 0 );	// sheetNumber = 0, no header used, filled into dataListDouble
-double[][] doubles = myData.DataListDoubleAsArrayRagged();	// there you have your Excel's file data to your convenience
+double[][] doubles = myData.DataListDoubleAsArrayJagged();	// there you have your Excel's file data to your convenience
 ```
 
 You should add data from the program side into the lists and then **write** the file:
