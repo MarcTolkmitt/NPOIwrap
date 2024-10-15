@@ -1,5 +1,6 @@
+This is a closed project. I do believe **NPOI** is unsafe to use. There were files installed from the Nuget-package that denied removal via the explorer. No chance of a mistake **NPOI** will be undone on my computers !!!  
 
-THIS DLL IS AVAILABLE AS NUGET-PACKAGE 'helper-**NPOIwrap**-use-Excel-xlsx.1.0.7.nupkg'   
+THIS DLL IS no longer AVAILABLE AS NUGET-PACKAGE 'helper-**NPOIwrap**-use-Excel-xlsx.1.0.7.nupkg'   
 ## 1. my motivation  
 Seeing **NPOI** and using it is great. Usage for my own software is reading and writing 
 data from/to real Excel files.  
